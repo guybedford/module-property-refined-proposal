@@ -1,8 +1,7 @@
 This specification represents a NodeJS resolution algorithm which is backwards compatible with the existing [Node modules resolution algorithm](https://nodejs.org/api/modules.html#modules_all_together), while supporting package.json lookups for all module loads, allowing a new `format` property to indicate `"cjs"` or `"esm"` formats for packages to be interpreted as CommonJS or ECMAScript Modules respectively.
 
 For performance, it is assumed that the algorithm would cache the package.json contents in a single cache,
-reusing the cached contents for the duration of execution, just like modules get cached in the module registry
-for the duration of execution.
+reusing the cached contents for the duration of execution (including caching the absence of a package.json file), just like modules get cached in the module registry for the duration of execution.
 
 > **RESOLVE(name: String, parentPath: String): ModuleNamespace**
 > 1. Assert _parentPath_ is a valid file system path.
