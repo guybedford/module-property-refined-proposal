@@ -21,7 +21,7 @@ reusing the cached contents for the duration of execution (including caching the
 > **RESOLVE_MODULE_PATH(requestPath: String): ModuleNamespace**
 > 1. Let _{ main, format, packagePath }_ be the destructured object values of the result of _GET_PACKAGE_CONFIG(requestPath)_.
 > 1. If _format_ is _undefined_ then,
->    1. Set _format_ to _"cjs"_.
+>    1. Set _format_ to the current execution environment default module format name.
 > 1. If _main_ is not _undefined_ and _packagePath_ is not _undefined_ and is equal to the path of _requestPath_ (ignoring trailing path separators) then,
 >    1. Set _requestPath_ to the path resolution of _main_ to _packagePath_.
 > 1. Let _resolvedPath_ be the result of _RESOLVE_FILE(requestPath)_, propagating any error on abrubt completion.
