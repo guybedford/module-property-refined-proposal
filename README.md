@@ -1,6 +1,6 @@
 # NodeJS Module Resolver Proposal - package.json "format" property
 
-This proposal builds directly on the original [In Defense of Dot JS](https://github.com/dherman/defense-of-dot-js/blob/master/proposal.md) that specifies a `module` property in the package.json as a way of whitelisting modules that use ES modules syntax.
+This proposal builds directly on the original [In Defense of Dot JS](https://github.com/dherman/defense-of-dot-js/blob/master/proposal.md) that specifies a `module` property in the package.json as a way of whitelisting modules that use ES modules syntax, as well as other discussions on package.json [properties](https://github.com/nodejs/node/wiki/ES6-Module-Detection-in-Node#option-4-meta-in-packagejson) and [flags](https://github.com/dherman/defense-of-dot-js/issues/10).
 
 Like that specification, this specification adds a single new package.json property, but with the simplicity of only two possible values:
 
