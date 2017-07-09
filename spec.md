@@ -32,6 +32,8 @@ reusing the cached contents for the duration of execution (including caching the
 >       1. Return the resolved module at _resolvedPath_, loaded as a JSON file.
 >    1. If _resolvedPath_ ends with _".node"_ then,
 >       1. Return the resolved module at _resolvedPath_, loaded as a NodeJS binary.
+>    1. If _resolvedPath_ ends with _".wasm"_ then,
+>       1. Throw _Invalid Module Name_.
 >    1. If _format_ is equal to _"cjs"_ then,
 >       1. Return the resolved module at _resolvedPath_, loaded as a CommonJS module.
 >    1. If _format_ is equal to _"esm"_ then,
