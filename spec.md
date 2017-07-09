@@ -19,7 +19,7 @@ reusing the cached contents for the duration of execution (including caching the
 >    1. Return the result of _NODE_MODULES_RESOLVE(name)_, propagating any error on abrupt completion.
 
 > **RESOLVE_MODULE_PATH(requestPath: String): ModuleNamespace**
-> 1. Let _{ main, format, packagePath }_ be the destructured object values of the result of _GET_PACKAGE_CONFIG(requestPath)_.
+> 1. Let _{ main, format, packagePath }_ be the destructured object values of the result of _GET_PACKAGE_CONFIG(requestPath)_, propagating any errors on abrupt completion.
 > 1. If _format_ is _undefined_ then,
 >    1. Set _format_ to the current execution environment default module format name.
 > 1. If _main_ is not _undefined_ and _packagePath_ is not _undefined_ and is equal to the path of _requestPath_ (ignoring trailing path separators) then,
@@ -40,7 +40,7 @@ reusing the cached contents for the duration of execution (including caching the
 >       1. Return the resolved module at _resolvedPath_, loaded as an ECMAScript module.
 > 1. Throw _Not Found_.
 
-> **GET_PACKAGE_CONFIG(requestPath: String): { main: String, format: String }**
+> **GET_PACKAGE_CONFIG(requestPath: String): { main: String, format: String, packagePath: String }**
 > 1. For each parent folder _packagePath_ of _requestPath_ in descending order of length,
 >    1. If _packagePath_ ends with the segment _"node_modules"_ then,
 >       1. Break the loop.
@@ -66,6 +66,6 @@ reusing the cached contents for the duration of execution (including caching the
 
 > **NODE_MODULES_RESOLVE(name: String, parentPath: String): String**
 > 1. For each parent folder _modulesPath_ of _parentPath_ in descending order of length,
->    1. Let _resolvedModule_ be the result of _RESOLVE_PATH("${modulesPath}/node_modules/${name}")_.
+>    1. Let _resolvedModule_ be the result of _RESOLVE_PATH("${modulesPath}/node_modules/${name}")_, propagating any errors on abrupt completion.
 >    1. If _resolvedModule_ is not _undefined_ then,
 >       1. Return _resolvedModule_.
