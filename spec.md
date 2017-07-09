@@ -7,13 +7,13 @@ reusing the cached contents for the duration of execution (including caching the
 > 1. Assert _parentPath_ is a valid file system path.
 > 1. If _name_ is a NodeJS core module then,
 >    1. Return the NodeJS core _ModuleNamespace_ object.
-> 1. Let _requestPath_ be set to _undefined_.
 > 1. If _name_ is a valid absolute file system path, or begins with _'./'_, _'/'_ or '../' then,
->    1. Set _requestPath_ to the path resolution of _name_ to _parentPath_, with URL percent-decoding applied and any _"\\"_ characters converted into _"/"_ for posix environments.
+>    1. Let _requestPath_ be the path resolution of _name_ to _parentPath_, with URL percent-decoding applied and any _"\\"_ characters converted into _"/"_ for posix environments.
+>    1. Return the result of _RESOLVE_MODULE_PATH(requestPath)_, propagating any error on abrupt completion.
 > 1. Otherwise, if _name_ parses as a _URL_ then,
 >    1. If _name_ is not a valid file system URL then,
 >       1. Throw _Invalid Module Name_.
->    1. Set _requestPath_ to the file system path corresponding to the file URL.
+>    1. Let _requestPath_ be the file system path corresponding to the file URL.
 >    1. Return the result of _RESOLVE_MODULE_PATH(requestPath)_, propagating any error on abrupt completion.
 > 1. Otherwise,
 >    1. Return the result of _NODE_MODULES_RESOLVE(name)_, propagating any error on abrupt completion.
