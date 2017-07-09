@@ -4,7 +4,7 @@ For performance, it is assumed that the algorithm would cache the package.json c
 reusing the cached contents for the duration of execution, just like modules get cached in the module registry
 for the duration of execution.
 
-> RESOLVE(name: String, parentPath: String): ModuleNamespace
+> **RESOLVE(name: String, parentPath: String): ModuleNamespace**
 > 1. Assert _parentPath_ is a valid file system path.
 > 1. If _name_ is a NodeJS core module then,
 >    1. Return the NodeJS core _ModuleNamespace_ object.
@@ -18,8 +18,8 @@ for the duration of execution.
 >    1. Return the result of _RESOLVE_MODULE_PATH(requestPath)_, propagating any error on abrupt completion.
 > 1. Otherwise,
 >    1. Return the result of _NODE_MODULES_RESOLVE(name)_, propagating any error on abrupt completion.
->
-> RESOLVE_MODULE_PATH(requestPath: String): ModuleNamespace
+
+> **RESOLVE_MODULE_PATH(requestPath: String): ModuleNamespace**
 > 1. Let _{ main, format, packagePath }_ be the destructured object values of the result of _GET_PACKAGE_CONFIG(requestPath)_.
 > 1. If _format_ is _undefined_ then,
 >    1. Set _format_ to _"cjs"_.
@@ -29,17 +29,17 @@ for the duration of execution.
 > 1. If _resolvedPath_ is not _undefined_ then,
 >    1. If _resolvedPath_ ends with _".mjs"_ then,
 >       1. Return the resolved module at _resolvedPath_, loaded as an ECMAScript module.
->    1  If _resolvedPath_ ends with _".json"_ then,
+>    1. If _resolvedPath_ ends with _".json"_ then,
 >       1. Return the resolved module at _resolvedPath_, loaded as a JSON file.
->    1. If _resolvedPath_ ends in _".node"_ then,
+>    1. If _resolvedPath_ ends with _".node"_ then,
 >       1. Return the resolved module at _resolvedPath_, loaded as a NodeJS binary.
 >    1. If _format_ is equal to _"cjs"_ then,
 >       1. Return the resolved module at _resolvedPath_, loaded as a CommonJS module.
 >    1. If _format_ is equal to _"esm"_ then,
 >       1. Return the resolved module at _resolvedPath_, loaded as an ECMAScript module.
 > 1. Throw _Not Found_.
->
-> GET_PACKAGE_CONFIG(requestPath: String): Object { main?: string, format?: string }
+
+> **GET_PACKAGE_CONFIG(requestPath: String): { main: String, format: String }**
 > 1. For each parent folder _packagePath_ of _requestPath_ in descending order of length,
 >    1. If _packagePath_ ends with the segment _"node_modules"_ then,
 >       1. Break the loop.
@@ -48,11 +48,11 @@ for the duration of execution.
 >       1. Let _main_ be the value of _json.main_.
 >       1. Let _format_ be the value of _json.format_.
 >       1. If _main_ or _format_ is defined and not a string, throw _Invalid Config_.
->       1. If _format_ is not equal to _"cjs"_ or _"esm"_ then, throw _Invalid Config_.
+>       1. If _format_ is defined and not equal to _"cjs"_ or _"esm"_ then, throw _Invalid Config_.
 >       1. Return the object with keys for the values of _{ main, format, packagePath }_.
 > 1. Return the empty configuration _{ main: undefined, format: undefined, packagePath: undefined }_.
->
-> RESOLVE_FILE(filePath: String): String
+
+> **RESOLVE_FILE(filePath: String): String**
 > 1. If _filePath_ is a file, return _X_.
 > 1. If _"${filePath}.mjs"_ is a file, return _"${filePath}.js"_.
 > 1. If _"${filePath}.js"_ is a file, return _"${filePath}.js"_.
@@ -62,8 +62,8 @@ for the duration of execution.
 > 1. If _"${filePath}/index.json"_ is a file, return _"${filePath}/index.json"_.
 > 1. If _"${filePath}/index.node"_ is a file, return _"${filePath}/index.node"_.
 > 1. Return _undefined_.
->
-> NODE_MODULES_RESOLVE(name: String, parentPath: String): String
+
+> **NODE_MODULES_RESOLVE(name: String, parentPath: String): String**
 > 1. For each parent folder _modulesPath_ of _parentPath_ in descending order of length,
 >    1. Let _resolvedModule_ be the result of _RESOLVE_PATH("${modulesPath}/node_modules/${name}")_.
 >    1. If _resolvedModule_ is not _undefined_ then,
