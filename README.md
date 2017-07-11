@@ -26,7 +26,7 @@ When starting a new NodeJS project, the package.json would need a ``"format": "e
 
 This would be completely equivalent to having a `package.json` file in the base folder with `"format": "esm"` set. The determination of the base folder at which the format applies for this default format flag uses the same package.json lookup as described in the previous section, defaulting to setting the root file system package format if no `package.json` file is found at all (acting as if `/package.json` contained `"format": "esm"`).
 
-This way, `node --module node_modules/x/y.js` would still default to falling back to CommonJS instead of ES Modules, while `node --module ./x.js` in turn loading a `../y/y.js` would default to treating `y.js` as CommonJS only if either `./package.json` did not exist, or if `../y/package.json` were to exist and didn't have a format property.
+This way, `node --module node_modules/x/y.js` would still default to falling back to CommonJS instead of ES Modules, while `node --module ./x.js` in turn loading a `../y/y.js` would default to treating `y.js` as as an ES Module only if `./package.json` and `../y/package.json` were to not exist.
 
 ### Packages consisting of both CommonJS and ES Modules
 
