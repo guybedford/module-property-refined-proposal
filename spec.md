@@ -1,9 +1,8 @@
 This specification represents a NodeJS resolution algorithm which is backwards compatible with the existing [Node modules resolution algorithm](https://nodejs.org/api/modules.html#modules_all_together), while supporting package.json lookups for all module loads, allowing a new `format` property to indicate `"cjs"` or `"esm"` formats for packages to be interpreted as CommonJS or ECMAScript Modules respectively.
 
-For performance, it is assumed that the algorithm would cache the package.json contents in a single cache,
-reusing the cached contents for the duration of execution (including caching the absence of a package.json file), just like modules get cached in the module registry for the duration of execution.
+For performance the package.json contents are cached for the duration of execution (including caching the absence of a package.json file), just like modules get cached in the module registry for the duration of execution. This caching is described in the GET_PACKAGE_CONFIG function.
 
-If a `node --module x` flag were to be supported, this sets the `modulesDefault` argument to true in the resolution process.
+If a `node --module x` flag were to be supported, this sets the `modulesDefault` argument to true in the resolution process for that entry point only.
 
 > **RESOLVE(name: String, parentPath: String, modulesDefault: Boolean): ModuleNamespace**
 > 1. Assert _parentPath_ is a valid file system path.
@@ -44,6 +43,11 @@ If a `node --module x` flag were to be supported, this sets the `modulesDefault`
 
 > **GET_PACKAGE_CONFIG(requestPath: String, modulesDefault: Boolean): { main: String, format: String, packagePath: String }**
 > 1. For each parent folder _packagePath_ of _requestPath_ in descending order of length,
+>    1. If there is already a cached package config result for _packagePath_ then,
+>       1. If that cached package result is an empty configuration entry then,
+>          1. Continue the loop.
+>       1. Otherwise,
+>          1. Return the cached package config result for this folder.
 >    1. If _packagePath_ ends with the segment _"node_modules"_ then,
 >       1. Break the loop.
 >    1. If _packagePath_ contains a _package.json_ file then,
@@ -54,10 +58,16 @@ If a `node --module x` flag were to be supported, this sets the `modulesDefault`
 >       1. If _format_ is defined and not equal to _"cjs"_ or _"esm"_ then, throw _Invalid Config_.
 >       1. If _format_ is _undefined_ and _modulesDefault_ is _true_ then,
 >          1. Set _format_ to _"esm".
->       1. Return the object with keys for the values of _{ main, format, packagePath }_.
->    1. If _modulesDefault_ is _true_ and this is the root file system folder then,
->       1. Return the configuration _{ main: undefined, format: "esm", packagePath }_.
-> 1. Return the empty configuration _{ main: undefined, format: undefined, packagePath: undefined }_.
+>       1. Let _result_ be the object with keys for the values of _{ main, format, packagePath }_.
+>       1. Set in the package config cache the value for _packagePath_ as _result_.
+>       1. Return _result_.
+>    1. Otherwise if _modulesDefault_ is _true_ and this is the root file system folder then,
+>       1. Let _result_ be the object _{ main: undefined, format: "esm", packagePath }_.
+>       1. Set in the package config cache the value for _packagePath_ as _result_.
+>       1. Return _result_.
+>    1. Otherwise,
+>       1. Set in the package config cache the value for _packagePath_ as an empty configuration entry.
+> Return the empty configuration object _{ main: undefined, format: undefined, packagePath: undefined }_.
 
 > **RESOLVE_FILE(filePath: String): String**
 > 1. If _filePath_ is a file, return _X_.
