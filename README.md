@@ -27,7 +27,7 @@ When starting a new NodeJS project, the package.json would need a ``"format": "e
 There are two possible ways of working around this:
 
 1. Write a file with an `.mjs` file extension.
-2. Write a `.js` file with a `"use module"` header (https://github.com/tc39/proposal-modules-pragma).
+2. Write a `.js` file with a `"use module"` directive (https://github.com/tc39/proposal-modules-pragma).
 
 ### Packages consisting of both CommonJS and ES Modules
 
