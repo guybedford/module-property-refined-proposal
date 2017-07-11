@@ -15,7 +15,7 @@ A draft specification of the NodeJS module resolution algorithm with this adjust
 The assumption is that NodeJS has a default module format for interpreting modules as CommonJS.
 
 * For a given module, the package.json file is checked in that folder, continuing to check parent folders for a package.json if none is found. If we reach a parent folder of `node_modules`, we stop this search process.
-* When no package.json format if found, NodeJS would default to loading a module as CommonJS. This would throw for attempting to load an ES module file with no package.json format present (no [unambiguous grammar implementation](https://github.com/bmeck/UnambiguousJavaScriptGrammar/blob/master/README.md) being provided here).
+* When no package.json format is found, NodeJS would default to loading a module as CommonJS. This would throw for attempting to load an ES module file with no package.json format present (no [unambiguous grammar implementation](https://github.com/bmeck/UnambiguousJavaScriptGrammar/blob/master/README.md) being provided here).
 * When loading an `.mjs` file, the format is implied by the extension, loading as an ECMAScript module.
 
 These rules are taken into account in the [draft resolver specification here](spec.md).
@@ -26,7 +26,7 @@ When starting a new NodeJS project, the package.json would need a ``"format": "e
 
 This would be completely equivalent to having a `package.json` file in the base folder with `"format": "esm"` set. The determination of the base folder at which the format applies for this default format flag uses the same package.json lookup as described in the previous section, defaulting to setting the root file system package format if no `package.json` file is found at all (acting as if `/package.json` contained `"format": "esm"`).
 
-This way, `node --module node_modules/x/y.js` would still default to falling back to CommonJS instead of ES Modules, while `node --module ../x/x.js` would default to CommonJS only if either `./package.json` did not exist, or if `../x/package.json` were to exist and didn't have a format property.
+This way, `node --module node_modules/x/y.js` would still default to falling back to CommonJS instead of ES Modules, while `node --module ./x.js` in turn loading a `../y/y.js` would default to treating `y.js` as CommonJS only if either `./package.json` did not exist, or if `../y/package.json` were to exist and didn't have a format property.
 
 ### Packages consisting of both CommonJS and ES Modules
 
