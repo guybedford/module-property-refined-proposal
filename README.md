@@ -10,10 +10,9 @@ When loading any module, the package.json is checked using a small extension to 
 
 A draft specification of the NodeJS module resolution algorithm with this adjustment is included at [spec.md](spec.md).
 
-### Default format interpretation
+### Format interpretation
 
-The assumption is that NodeJS has a default module format for interpreting modules as CommonJS.
-
+* The assumption is that NodeJS has a default of interpreting modules as CommonJS when no other indication is given.
 * For a given module, the package.json file is checked in that folder, continuing to check parent folders for a package.json if none is found. If we reach a parent folder of `node_modules`, we stop this search process.
 * When no package.json format is found, NodeJS would default to loading a module as CommonJS. This would throw for attempting to load an ES module file with no package.json format present (no [unambiguous grammar implementation](https://github.com/bmeck/UnambiguousJavaScriptGrammar/blob/master/README.md) being provided here).
 * When loading an `.mjs` file, the format is implied by the extension, loading as an ECMAScript module.
