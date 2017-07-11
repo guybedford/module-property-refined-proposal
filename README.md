@@ -22,11 +22,12 @@ These rules are taken into account in the [draft resolver specification here](sp
 
 ### Loading modules without a package.json
 
-When starting a new NodeJS project, the package.json would need a ``"format": "esm"`` property or a `.mjs` file in order to use ES modules. In order to remove this restriction the suggestion (but not specification) here is to allow the entry point package format to be set to a default via a flag like `node --module lib/x.js`.
+When starting a new NodeJS project, the package.json would need a ``"format": "esm"`` property to load `.js` files as modules instead of as CommonJS.
 
-This would be completely equivalent to having a `package.json` file in the base folder with `"format": "esm"` set. The determination of the base folder at which the format applies for this default format flag uses the same package.json lookup as described in the previous section, defaulting to setting the root file system package format if no `package.json` file is found at all (acting as if `/package.json` contained `"format": "esm"`).
+There are two possible ways of working around this:
 
-This way, `node --module node_modules/x/y.js` would still default to falling back to CommonJS instead of ES Modules, while `node --module ./x.js` in turn loading a `../y/y.js` would default to treating `y.js` as as an ES Module only if `./package.json` and `../y/package.json` were to not exist.
+1. Write a file with an `.mjs` file extension.
+2. Write a `.js` file with a `"use module"` header (https://github.com/tc39/proposal-modules-pragma).
 
 ### Packages consisting of both CommonJS and ES Modules
 
