@@ -15,18 +15,13 @@ A draft specification of the NodeJS module resolution algorithm with this adjust
 * The assumption is that NodeJS has a default of interpreting modules as CommonJS when no other indication is given.
 * For a given module, the package.json file is checked in that folder, continuing to check parent folders for a package.json if none is found. If we reach a parent folder of `node_modules`, we stop this search process.
 * When no package.json format is found, NodeJS would default to loading a module as CommonJS. This would throw for attempting to load an ES module file with no package.json format present (no [unambiguous grammar implementation](https://github.com/bmeck/UnambiguousJavaScriptGrammar/blob/master/README.md) being provided here).
-* When loading an `.mjs` file, the format is implied by the extension, loading as an ECMAScript module.
+* When loading an `.mjs` file or a source with a `"use module"`, the format is implied by the extension, loading as an ECMAScript module.
 
 These rules are taken into account in the [draft resolver specification here](spec.md).
 
 ### Loading modules without a package.json
 
-When starting a new NodeJS project, the package.json would need a ``"format": "esm"`` property to load `.js` files as modules instead of as CommonJS.
-
-There are two possible ways of working around this:
-
-1. Write a file with an `.mjs` file extension.
-2. Write a `.js` file with a `"use module"` directive (https://github.com/tc39/proposal-modules-pragma).
+If writing a `.js` file without any `package.json` configuration, it would be possible to opt-in to ES modules by indicating this by either using the `.mjs` file extension or `"use module"` directive (https://github.com/tc39/proposal-modules-pragma).
 
 ### Packages consisting of both CommonJS and ES Modules
 

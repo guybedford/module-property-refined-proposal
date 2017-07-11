@@ -34,7 +34,10 @@ For performance the package.json contents are cached for the duration of executi
 >    1. If _resolvedPath_ ends with _".wasm"_ then,
 >       1. Throw _Invalid Module Name_.
 >    1. If _format_ is equal to _"cjs"_ then,
->       1. Return the resolved module at _resolvedPath_, loaded as a CommonJS module.
+>       1. If the module at _resolvedPath_ contains a _"use module"_ directive then,
+>          1. Return the resolved module at _resolvedPath_, loaded as an ECMAScript module.
+>       1. Otherwise,
+>          1. Return the resolved module at _resolvedPath_, loaded as a CommonJS module.
 >    1. If _format_ is equal to _"esm"_ then,
 >       1. Return the resolved module at _resolvedPath_, loaded as an ECMAScript module.
 > 1. Throw _Not Found_.
