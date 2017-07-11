@@ -59,7 +59,7 @@ For performance the package.json contents are cached for the duration of executi
 >       1. Return _result_.
 >    1. Otherwise,
 >       1. Set in the package config cache the value for _packagePath_ as an empty configuration entry.
-> Return the empty configuration object _{ main: undefined, format: undefined, packagePath: undefined }_.
+> 1. Return the empty configuration object _{ main: undefined, format: undefined, packagePath: undefined }_.
 
 > **RESOLVE_FILE(filePath: String): String**
 > 1. If _filePath_ is a file, return _X_.
