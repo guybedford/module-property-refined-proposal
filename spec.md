@@ -3,25 +3,27 @@ This specification represents a NodeJS resolution algorithm which is backwards c
 For performance, it is assumed that the algorithm would cache the package.json contents in a single cache,
 reusing the cached contents for the duration of execution (including caching the absence of a package.json file), just like modules get cached in the module registry for the duration of execution.
 
-> **RESOLVE(name: String, parentPath: String): ModuleNamespace**
+If a `node --module x` flag were to be supported, this sets the `modulesDefault` argument to true in the resolution process.
+
+> **RESOLVE(name: String, parentPath: String, modulesDefault: Boolean): ModuleNamespace**
 > 1. Assert _parentPath_ is a valid file system path.
 > 1. If _name_ is a NodeJS core module then,
 >    1. Return the NodeJS core _ModuleNamespace_ object.
 > 1. If _name_ is a valid absolute file system path, or begins with _'./'_, _'/'_ or '../' then,
 >    1. Let _requestPath_ be the path resolution of _name_ to _parentPath_, with URL percent-decoding applied and any _"\\"_ characters converted into _"/"_ for posix environments.
->    1. Return the result of _RESOLVE_MODULE_PATH(requestPath)_, propagating any error on abrupt completion.
+>    1. Return the result of _RESOLVE_MODULE_PATH(requestPath, modulesDefault)_, propagating any error on abrupt completion.
 > 1. Otherwise, if _name_ parses as a _URL_ then,
 >    1. If _name_ is not a valid file system URL then,
 >       1. Throw _Invalid Module Name_.
 >    1. Let _requestPath_ be the file system path corresponding to the file URL.
->    1. Return the result of _RESOLVE_MODULE_PATH(requestPath)_, propagating any error on abrupt completion.
+>    1. Return the result of _RESOLVE_MODULE_PATH(requestPath, modulesDefault)_, propagating any error on abrupt completion.
 > 1. Otherwise,
->    1. Return the result of _NODE_MODULES_RESOLVE(name)_, propagating any error on abrupt completion.
+>    1. Return the result of _NODE_MODULES_RESOLVE(name, modulesDefault)_, propagating any error on abrupt completion.
 
-> **RESOLVE_MODULE_PATH(requestPath: String): ModuleNamespace**
-> 1. Let _{ main, format, packagePath }_ be the destructured object values of the result of _GET_PACKAGE_CONFIG(requestPath)_, propagating any errors on abrupt completion.
+> **RESOLVE_MODULE_PATH(requestPath: String, modulesDefault: Boolean): ModuleNamespace**
+> 1. Let _{ main, format, packagePath }_ be the destructured object values of the result of _GET_PACKAGE_CONFIG(requestPath, modulesDefault)_, propagating any errors on abrupt completion.
 > 1. If _format_ is _undefined_ then,
->    1. Set _format_ to the current execution environment default module format name.
+>    1. Set _format_ to _"cjs"_.
 > 1. If _main_ is not _undefined_ and _packagePath_ is not _undefined_ and is equal to the path of _requestPath_ (ignoring trailing path separators) then,
 >    1. Set _requestPath_ to the path resolution of _main_ to _packagePath_.
 > 1. Let _resolvedPath_ be the result of _RESOLVE_FILE(requestPath)_, propagating any error on abrubt completion.
@@ -40,7 +42,7 @@ reusing the cached contents for the duration of execution (including caching the
 >       1. Return the resolved module at _resolvedPath_, loaded as an ECMAScript module.
 > 1. Throw _Not Found_.
 
-> **GET_PACKAGE_CONFIG(requestPath: String): { main: String, format: String, packagePath: String }**
+> **GET_PACKAGE_CONFIG(requestPath: String, modulesDefault: Boolean): { main: String, format: String, packagePath: String }**
 > 1. For each parent folder _packagePath_ of _requestPath_ in descending order of length,
 >    1. If _packagePath_ ends with the segment _"node_modules"_ then,
 >       1. Break the loop.
@@ -50,7 +52,11 @@ reusing the cached contents for the duration of execution (including caching the
 >       1. Let _format_ be the value of _json.format_.
 >       1. If _main_ or _format_ is defined and not a string, throw _Invalid Config_.
 >       1. If _format_ is defined and not equal to _"cjs"_ or _"esm"_ then, throw _Invalid Config_.
+>       1. If _format_ is _undefined_ and _modulesDefault_ is _true_ then,
+>          1. Set _format_ to _"esm".
 >       1. Return the object with keys for the values of _{ main, format, packagePath }_.
+>    1. If _modulesDefault_ is _true_ and this is the root file system folder then,
+>       1. Return the configuration _{ main: undefined, format: "esm", packagePath }_.
 > 1. Return the empty configuration _{ main: undefined, format: undefined, packagePath: undefined }_.
 
 > **RESOLVE_FILE(filePath: String): String**
@@ -64,8 +70,8 @@ reusing the cached contents for the duration of execution (including caching the
 > 1. If _"${filePath}/index.node"_ is a file, return _"${filePath}/index.node"_.
 > 1. Return _undefined_.
 
-> **NODE_MODULES_RESOLVE(name: String, parentPath: String): String**
+> **NODE_MODULES_RESOLVE(name: String, parentPath: String, modulesDefault: Boolean): String**
 > 1. For each parent folder _modulesPath_ of _parentPath_ in descending order of length,
->    1. Let _resolvedModule_ be the result of _RESOLVE_PATH("${modulesPath}/node_modules/${name}")_, propagating any errors on abrupt completion.
+>    1. Let _resolvedModule_ be the result of _RESOLVE_MODULE_PATH("${modulesPath}/node_modules/${name}", modulesDefault)_, propagating any errors on abrupt completion.
 >    1. If _resolvedModule_ is not _undefined_ then,
 >       1. Return _resolvedModule_.
