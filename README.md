@@ -13,7 +13,7 @@ Currently all our build tools detect modules in slightly different ways. The `pa
 ### Module property cases
 
 Instead of trying to consider a unified resolver here, we break the behaviour of NodeJS resolution into two separate resolvers:
-* The legacy CommonJS resolver as in use today, which is used by CommonJS.
+* The current resolver as in use today, which will continue to be used to resolve CommonJS modules from CommonJS modules.
 * The new ES Modules resolver, that also has the ability to load CommonJS modules.
 
 When using CommonJS `require`, the legacy resolver would be applied, and when using ES modules, the new ES module resolver algorithm, as along the lines specified here would be applied.
