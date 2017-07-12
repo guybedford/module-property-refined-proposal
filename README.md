@@ -12,12 +12,20 @@ Currently all our build tools detect modules in slightly different ways. The `pa
 
 ### Module property cases
 
-The simple cases remain the same as the previous proposal:
+Instead of trying to consider a unified resolver here, we break the behaviour of NodeJS resolution into two separate resolvers:
+* The legacy CommonJS resolver as in use today, which is used by CommonJS.
+* The new ES Modules resolver, that also has the ability to load CommonJS modules.
+
+When using CommonJS `require`, the legacy resolver would be applied, and when using ES modules, the new ES module resolver algorithm, as along the lines specified here would be applied.
+
+_The basic rule is then simply that the ES module resolver always loads a module from package with a "module" property as an ES module, and loads a module from a package without that property as a CommonJS module (unless it is a .mjs file or "use module" source)._
+
+Under this rule, the simple cases remain the same as the In Defense of Dot JS Proposal:
 
 * A package with only a `main` and no `module` property will be loaded as containing CommonJS modules only.
 * A package with only a `module` property and no `main` property will be loaded as containing ES Modules only.
 
-The difficult case is the transition case of a package that contains both a `main` and `module` property - selecting which main entry point and target to use when loading `pkg` or `pkg/x.js`. For this scenario, we take the following new approach:
+The difficult case with the In Defense of JS Proposal is the transition case of a package that contains both a `main` and `module` property - selecting which main entry point and target to use when loading `pkg` or `pkg/x.js`.
 
 For a package that contains both a `main` and a `module` property -
 * When the parent module doing the require is an ES Module, the `module` main will apply, and any module loaded from the package will be loaded as an ES Module.
