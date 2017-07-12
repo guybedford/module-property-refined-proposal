@@ -42,7 +42,7 @@ In the case where a package publicly exposes sub-modules, it would need to docum
 ### Package boundary detection
 
 * For a given module, the package.json file is checked in that folder, continuing to check parent folders for a package.json if none is found. If we reach a parent folder of `node_modules`, we stop this search process.
-* When no package.json format is found, NodeJS would default to loading any module as CommonJS. This would throw for attempting to load an ES module file with no package.json format present (no [unambiguous grammar implementation](https://github.com/bmeck/UnambiguousJavaScriptGrammar/blob/master/README.md) being provided here).
+* When no package.json module property is found, NodeJS would default to loading any module as CommonJS. This would throw for attempting to load an ES module file with no package.json module property present (no [unambiguous grammar implementation](https://github.com/bmeck/UnambiguousJavaScriptGrammar/blob/master/README.md) being provided here).
 * When loading an `.mjs` file or a source with a `"use module"`, the format is implied by the extension, loading as an ECMAScript module.
 
 These rules are taken into account in the [draft resolver specification here](spec.md).
