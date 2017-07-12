@@ -55,8 +55,6 @@ If writing a `.js` file without any `package.json` configuration, it would be po
 
 For a package that contains both ES modules in a `lib` folder and CommonJS modules in a `test` folder, the approach that could be taken would be to have two package.json files - one at the base of the package with a `package.json` containing a `module` property, and another in the `test` folder itself, without any `module` property. The `test` folder package.json would then take precedence for that subfolder, allowing a partial adoption path.
 
-### Enabling future extensions
+### Enabling wasm
 
 For future support of Web Assembly, this spec also reserves the file extension `.wasm` as throwing an error when attempting to load modules with this extension, in order to allow Web Assembly loading to work by default in future.
-
-By using a string value for the module contract, additional adjustments to the module contract might be supported in future to alter things like entry point resolution, automatic file extension adding and file extension handling.
