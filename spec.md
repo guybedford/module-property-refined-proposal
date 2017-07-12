@@ -1,4 +1,4 @@
-This specification represents a NodeJS resolution algorithm which is backwards compatible with the existing [Node modules resolution algorithm](https://nodejs.org/api/modules.html#modules_all_together), while supporting package.json lookups for all module loads, allowing a new `format` property to indicate `"cjs"` or `"esm"` formats for packages to be interpreted as CommonJS or ECMAScript Modules respectively.
+This specification represents a NodeJS resolution algorithm which is backwards compatible with the existing [Node modules resolution algorithm](https://nodejs.org/api/modules.html#modules_all_together), while supporting package.json lookups for all module loads, allowing the parent module type and `"module"` property to assist in determining the distinction between ES Modules and CommonJS.
 
 For performance the package.json contents are cached for the duration of execution (including caching the absence of a package.json file), just like modules get cached in the module registry for the duration of execution. This caching is described in the GET_PACKAGE_CONFIG function.
 
