@@ -74,7 +74,7 @@ Note also that this resolver would only apply within the ES module system, while
 
 > **RESOLVE_FILE(filePath: String): String**
 > 1. If _filePath_ is a file, return _X_.
-> 1. If _"${filePath}.mjs"_ is a file, return _"${filePath}.js"_.
+> 1. If _"${filePath}.mjs"_ is a file, return _"${filePath}.mjs"_.
 > 1. If _"${filePath}.js"_ is a file, return _"${filePath}.js"_.
 > 1. If _"${filePath}.json"_ is a file, return _"${filePath}.json"_.
 > 1. If _"${filePath}.node"_ is a file, return _"${filePath}.node"_.
