@@ -17,9 +17,9 @@ The simple cases remain the same as the previous proposal:
 * A package with only a `main` and no `module` property will be loaded as containing CommonJS modules only.
 * A package with only a `module` property and no `main` property will be loaded as containing ES Modules only.
 
-The difficult case is the transition case of a package that contains both a `main` and `module` property. For this scenario, we take the following new approach.
+The difficult case is the transition case of a package that contains both a `main` and `module` property - selecting which main entry point and target to use when loading `pkg` or `pkg/x.js`. For this scenario, we take the following new approach:
 
-For a package that contains both a `main` and a `module` property:
+For a package that contains both a `main` and a `module` property -
 * When the parent module doing the require is an ES Module, the `module` main will apply, and any module loaded from the package will be loaded as an ES Module.
 * When the parent module doing the require is a CommonJS module, the `main` main will apply, and any module loaded from the package will be loaded as a CommonJS Module.
 
