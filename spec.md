@@ -2,31 +2,34 @@ This specification represents a NodeJS resolution algorithm which is backwards c
 
 For performance the package.json contents are cached for the duration of execution (including caching the absence of a package.json file), just like modules get cached in the module registry for the duration of execution. This caching is described in the GET_PACKAGE_CONFIG function.
 
-> **RESOLVE(name: String, parentPath: String, parentIsEsModule: Boolean): ModuleNamespace**
+The `Module` object here returned by the resolver would effectively be a wrapper class of around the [V8 Module class](https://v8.paulfryzel.com/docs/master/classv8_1_1_module.html).
+
+Note also that this resolver would only apply within the ES module system, while `require()` would continue to use the legacy resolver code. This way we do not disturb the edge cases of this algorithm on the existing ecosystem. This resolver thus handles only the logic branch path of assuming a package with both a `module` and a `main` property should provide its modules as ES Modules, as CommonJS modules would be assumed for `require()` calls into the package by the legacy resolver algorithm.
+
+> **RESOLVE(name: String, parentPath: String): Module**
 > 1. Assert _parentPath_ is a valid file system path.
 > 1. If _name_ is a NodeJS core module then,
->    1. Return the NodeJS core _ModuleNamespace_ object.
+>    1. Return the NodeJS core _Module_ object.
 > 1. If _name_ is a valid absolute file system path, or begins with _'./'_, _'/'_ or '../' then,
 >    1. Let _requestPath_ be the path resolution of _name_ to _parentPath_, with URL percent-decoding applied and any _"\\"_ characters converted into _"/"_ for posix environments.
->    1. Return the result of _RESOLVE_MODULE_PATH(requestPath, parentIsEsModule)_, propagating any error on abrupt completion.
+>    1. Return the result of _RESOLVE_MODULE_PATH(requestPath)_, propagating any error on abrupt completion.
 > 1. Otherwise, if _name_ parses as a _URL_ then,
 >    1. If _name_ is not a valid file system URL then,
 >       1. Throw _Invalid Module Name_.
 >    1. Let _requestPath_ be the file system path corresponding to the file URL.
->    1. Return the result of _RESOLVE_MODULE_PATH(requestPath, parentIsEsModule)_, propagating any error on abrupt completion.
+>    1. Return the result of _RESOLVE_MODULE_PATH(requestPath)_, propagating any error on abrupt completion.
 > 1. Otherwise,
->    1. Return the result of _NODE_MODULES_RESOLVE(name, parentIsEsModule)_, propagating any error on abrupt completion.
+>    1. Return the result of _NODE_MODULES_RESOLVE(name)_, propagating any error on abrupt completion.
 
-> **RESOLVE_MODULE_PATH(requestPath: String, parentIsEsModule: Boolean): ModuleNamespace**
-> 1. Let _{ main, module, packagePath }_ be the destructured object values of the result of _GET_PACKAGE_CONFIG(requestPath, parentIsEsModule)_, propagating any errors on abrupt completion.
+> **RESOLVE_MODULE_PATH(requestPath: String): Module**
+> 1. Let _{ main, module, packagePath }_ be the destructured object values of the result of _GET_PACKAGE_CONFIG(requestPath)_, propagating any errors on abrupt completion.
 > 1. Let _loadAsModule_ be equal to _false_.
-> 1. If _parentIsEsModule_ is _true_ then,
->    1. If _module_ is equal to _true_ then,
->       1. Set _main_ to _undefined_.
->       1. Set _loadAsModule_ to _true_.
->    1. If _module_ is a string then,
->       1. Set _main_ to _module_.
->       1. Set _loadAsModule_ to _true_.
+> 1. If _module_ is equal to _true_ then,
+>    1. Set _main_ to _undefined_.
+>    1. Set _loadAsModule_ to _true_.
+> 1. If _module_ is a string then,
+>    1. Set _main_ to _module_.
+>    1. Set _loadAsModule_ to _true_.
 > 1. If _main_ is not _undefined_ and _packagePath_ is not _undefined_ and is equal to the path of _requestPath_ (ignoring trailing path separators) then,
 >    1. Set _requestPath_ to the path resolution of _main_ to _packagePath_.
 > 1. Let _resolvedPath_ be the result of _RESOLVE_FILE(requestPath)_, propagating any error on abrubt completion.
@@ -80,8 +83,8 @@ For performance the package.json contents are cached for the duration of executi
 > 1. If _"${filePath}/index.node"_ is a file, return _"${filePath}/index.node"_.
 > 1. Return _undefined_.
 
-> **NODE_MODULES_RESOLVE(name: String, parentPath: String, parentIsEsModule: Boolean): String**
+> **NODE_MODULES_RESOLVE(name: String, parentPath: String): String**
 > 1. For each parent folder _modulesPath_ of _parentPath_ in descending order of length,
->    1. Let _resolvedModule_ be the result of _RESOLVE_MODULE_PATH("${modulesPath}/node_modules/${name}", parentIsEsModule)_, propagating any errors on abrupt completion.
+>    1. Let _resolvedModule_ be the result of _RESOLVE_MODULE_PATH("${modulesPath}/node_modules/${name}")_, propagating any errors on abrupt completion.
 >    1. If _resolvedModule_ is not _undefined_ then,
 >       1. Return _resolvedModule_.
