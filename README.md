@@ -25,6 +25,12 @@ For a package that contains both a `main` and a `module` property -
 
 In this way, we continue to support the existing ecosystem with backwards compatibility, while keeping the scope of the specification as simple as possible.
 
+### Public API for mixed CJS and ES Module packages
+
+A package delivering both CommonJS and ES Modules would then typically tell its users to just import via `import {x} from 'pkgName'` or `require('pkgName').x`.
+
+In the case where a package publicly exposes sub-modules, it would need to document that the CommonJS and ES Module sources are at different paths - `import {x} from 'pkgName/submodule.js'` vs `import {x} from 'pkgName/cjs/submodule.js'`. Or simply a `.js` and `.mjs` variant, this being the author's preference.
+
 ### Package boundary detection
 
 * For a given module, the package.json file is checked in that folder, continuing to check parent folders for a package.json if none is found. If we reach a parent folder of `node_modules`, we stop this search process.
