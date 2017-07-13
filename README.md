@@ -44,8 +44,7 @@ In the case where a package publicly exposes sub-modules, it would need to docum
 This proposal, like the previous one, requires that we can get the package configuration given only a module path. This is based on checking the package.json file through the folder hierarchy:
 
 * For a given module, the package.json file is checked in that folder, continuing to check parent folders for a package.json if none is found. If we reach a parent folder of `node_modules`, we stop this search process.
-* When no package.json module property is found, NodeJS would default to loading any module as CommonJS. This would throw for attempting to load an ES module file with no package.json module property present.
-* When loading an `.mjs` file or a source with a `"use module"`, the format is implied by the extension, loading as an ECMAScript module.
+* When no package.json module property is found, NodeJS would default to loading any module as CommonJS.
 
 These rules are taken into account in the [draft resolver specification here](spec.md).
 
