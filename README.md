@@ -45,6 +45,7 @@ This proposal, like the previous one, requires that we can get the package confi
 
 * For a given module, the package.json file is checked in that folder, continuing to check parent folders for a package.json if none is found. If we reach a parent folder of `node_modules`, we stop this search process.
 * When no package.json module property is found, NodeJS would default to loading any module as CommonJS.
+* These package configuration folder lookups are themselves cached, which is described in the draft algorithm here as well.
 
 These rules are taken into account in the [draft resolver specification here](spec.md).
 
