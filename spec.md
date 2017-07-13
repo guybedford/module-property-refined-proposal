@@ -85,6 +85,6 @@ Note also that this resolver would only apply within the ES module system, while
 
 > **NODE_MODULES_RESOLVE(name: String, parentPath: String): String**
 > 1. For each parent folder _modulesPath_ of _parentPath_ in descending order of length,
->    1. Let _resolvedModule_ be the result of _RESOLVE_MODULE_PATH("${modulesPath}/node_modules/${name}")_, propagating any errors on abrupt completion.
+>    1. Let _resolvedModule_ be the result of _RESOLVE_MODULE_PATH("${modulesPath}/node_modules/${name}/")_, propagating any errors on abrupt completion.
 >    1. If _resolvedModule_ is not _undefined_ then,
 >       1. Return _resolvedModule_.
