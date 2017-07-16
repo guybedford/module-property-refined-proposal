@@ -1,5 +1,7 @@
 # NodeJS Module Resolver Specification Proposal - Refined "module" Property Handling
 
+**This repo is now outdated, with the main proposal tracking at the [Node EPS PR](https://github.com/nodejs/node-eps/pull/60), with [readable version here](https://github.com/guybedford/node-eps/blob/master/xxx-package-module-property.md).**
+
 This proposal specifies the `"module"` property in the package.json, building on the previous work in the [In Defense of Dot JS](https://github.com/dherman/defense-of-dot-js/blob/master/proposal.md) proposal, as well as many other discussions.
 
 Instead of supporting the additional `"modules"` and `"modules.root"` properties from that proposal, this proposal aims to adjust the handling of `"module"` slightly so that it is the only property supported.
